@@ -1,0 +1,118 @@
+def save_contact():
+    with open("phonebook.txt", "r", encoding="UTF-8") as f_r:
+        contacts_str = f_r.read()
+        contacts_str = '1)' + contacts_str[0] + contacts_str[1:]
+    number = 2
+    enter_detect = 0
+    for ind in range(len(list(contacts_str))):
+        if list(contacts_str)[ind] == '\n':
+            enter_detect += 1
+            if enter_detect == 4:
+                contacts_str = contacts_str[:ind + 1] + str(number) + ')' + contacts_str[ind + 1:]
+                number += 1
+                enter_detect = 0
+    print(contacts_str)
+    search = input("Введите номер контакта, чтобы сохранить его в избранные и показать другие избранные контакты: ")
+    i_var = int(1) - 1
+    list_contacts = contacts_str.rstrip().split("\n\n")
+    for contact in list_contacts:
+        contact_lst = contact.split()
+        if search in contact_lst[i_var]:
+            with open("save_contacts.txt", "a", encoding="UTF-8") as f_w:
+                f_w.write(contact[3:] + '\n\n')
+
+def input_name():
+    return input("Введите имя: ")
+
+def input_surname():
+    return input("Введите фамилию: ")
+
+def input_patronumic():
+    return input("Введите отчество: ")
+
+def input_phone():
+    return input("Введите номер телефона: ")
+
+def input_address():
+    return input("Введите адрес: ")
+
+def create_contact():
+    name = input_name()
+    surname = input_surname()
+    patronumic = input_patronumic()
+    phone = input_phone()
+    address = input_address()
+    return f"{name} {surname} {patronumic} {phone}\n{address}\n\n"
+
+def add_contact():
+    contact = create_contact()
+    with open("phonebook.txt", "a", encoding="UTF-8") as f_w:
+        f_w.write(contact)
+
+def print_phonebook():
+    with open("phonebook.txt", "r", encoding="UTF-8") as f_r:
+        print(f_r.read())
+
+
+def print_save_contacts():
+    with open("save_contacts.txt", "r", encoding="UTF-8") as s_c:
+        print(s_c.read())
+
+
+def find_contact():
+    search = input("Введите данные для поиска: ")
+    print(
+        "Возможные варианты поиска:\n"
+        "1. По имени\n"
+        "2. По фамилии\n"
+        "3. По отчеству\n"
+        "4. По телефону\n"
+        "5. По адресу\n"
+    )
+    var = input("Выберите вариант поиска: ")
+    while var not in ("1", "2", "3", "4", "5"):
+        print("Некорректный ввод!")
+        var = input("Выберите вариант поиска: ")
+    i_var = int(1) - 1
+    with open("phonebook.txt", "r", encoding="UTF-8") as f_r:
+        contacts_str = f_r.read()
+    list_contacts = contacts_str.rstrip().split("\n\n")
+    for contact in list_contacts:
+        contact_lst = contact.split()
+        #print(contact_lst)
+        if search in contact_lst[i_var]:
+            print(contact)
+
+
+def ui():
+    with open("phonebook.txt","a", encoding="UTF-8"):
+        pass
+    choise = "0"
+    while choise != "5":
+        print(
+            "Возможные варианты действий:\n"
+            "1. Добавление нового контакта\n"
+            "2. Вывод данных на экран\n"
+            "3. Поиск контакта\n"
+            "4. Сохранить контакт в избранные\n"
+            "5. Показать избранные контакты\n"
+            "6. Выход из программы\n"
+              )
+        choise = input("Выберите вариант действия: ")
+        while choise not in ("1","2","3","4","5","6"):
+            print("Некорректный ввод!")
+            choise = input("Выберите вариант действия: ")
+        if choise == "1":
+            add_contact()
+        elif choise == "2":
+            print_phonebook()
+        elif choise == "3":
+            find_contact()
+        elif choise == "4":
+            save_contact()
+        elif choise == "5":
+            print_save_contacts()
+        else:
+            print("Всего доброго!")
+
+ui()
